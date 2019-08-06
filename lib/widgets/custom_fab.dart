@@ -17,13 +17,19 @@ class _CustomFabState extends State<CustomFab> {
       splashColor: Colors.blueAccent,
       onTap: widget.onTap,
       child: Container(
-        width: 45,
-        height: 45,
+        width: 90,
+        height: 40,
+        padding: EdgeInsets.all(4),
         decoration: BoxDecoration(
-          shape: BoxShape.circle,
+          borderRadius: BorderRadius.circular(60),
           color: Colors.white.withOpacity(0.7),
         ),
-        child: Center(child: Icon(Icons.favorite_border)),
+        child: Center(child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+          Text('5654'),
+          Icon(Icons.favorite_border, color: Colors.blueAccent,)
+        ],)),
       ),
     );
   }

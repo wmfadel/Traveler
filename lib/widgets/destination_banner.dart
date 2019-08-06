@@ -29,13 +29,13 @@ class DestinationBanner extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              Text(
-                _destination.name,
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 26),
-              ),
+             Text(
+                  _destination.name,
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 26),
+                ),
               Text(
                 '${_destination.hotelsCount} hotels available',
                 style: TextStyle(

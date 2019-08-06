@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'pages/places_page.dart';
+import 'pages/place_details.dart';
 
 void main() => runApp(App());
 
@@ -11,6 +12,7 @@ class App extends StatelessWidget {
       title: 'Traveler',
       routes: {
         '/': (context) => PlacesPage(),
+        PlaceDetails.routeName: (context) => PlaceDetails()
       },
     );
   }
