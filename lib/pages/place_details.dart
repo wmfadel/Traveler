@@ -4,7 +4,7 @@ import '../widgets/custom_fab.dart';
 
 import '../models/review.dart';
 import '../widgets/review_item.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'place_map.dart';
 
 class PlaceDetails extends StatefulWidget {
   static const String routeName = '/place-details';
@@ -72,42 +72,8 @@ class _PlaceDetailsState extends State<PlaceDetails> {
               },
             ),
             SizedBox(height: 40),
-            buildMapStack(),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget buildMapStack() {
-    return GestureDetector(
-      onTap: (){
-        // TODO open map screen
-      },
-      child: Stack(
-        children: <Widget>[
-          Container(
-            height: 300,
-            width: MediaQuery.of(context).size.width,
-            child: GoogleMap(
-              mapType: MapType.normal,
-              initialCameraPosition: CameraPosition(
-                zoom: 17,
-                target: LatLng(37.43296265331129, -122.08832357078792),
-              ),
-              onMapCreated: (GoogleMapController controller) {},
-            ),
-          ),
-          Container(
-            height: 150,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    colors: [Colors.white30, Colors.transparent],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter)),
-          ),
-        ],
       ),
     );
   }
@@ -137,7 +103,25 @@ class _PlaceDetailsState extends State<PlaceDetails> {
                 alignment: Alignment.bottomRight,
                 child: CustomFab(() {}),
               ),
-            )
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Align(
+                alignment: Alignment.bottomLeft,
+                child: MaterialButton(
+                    color: Colors.green,
+                    child: Text(
+                      'View on map',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    padding: EdgeInsets.all(8),
+                    height: 28,
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(PlaceMap.routeName,
+                          arguments: {'id': destination.id});
+                    }),
+              ),
+            ),
           ],
         ),
       ),
