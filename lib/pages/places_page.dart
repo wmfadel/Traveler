@@ -5,12 +5,17 @@ import '../widgets/destination_item.dart';
 import '../widgets/custom_drawer.dart';
 
 class PlacesPage extends StatefulWidget {
+
+  static const String routeName = '/';
+
   @override
   _PlacesPageState createState() => _PlacesPageState();
 }
 
 class _PlacesPageState extends State<PlacesPage>
     with SingleTickerProviderStateMixin {
+
+
   double screenWidth;
   double screenHeight;
   bool isCollapsed = true;
@@ -91,7 +96,7 @@ class _PlacesPageState extends State<PlacesPage>
                             isCollapsed = !isCollapsed;
                           });
                         }),
-                    Text('Home Page', style: TextStyle(fontSize: 18)),
+                    Text('Best Places', style: TextStyle(fontSize: 18)),
                     SizedBox(width: 40),
                   ],
                 ),

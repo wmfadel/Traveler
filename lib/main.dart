@@ -12,7 +12,7 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Traveler',
       routes: {
-        '/': (context) => PlacesPage(),
+        PlacesPage.routeName: (context) => PlacesPage(),
         PlaceDetails.routeName: (context) => PlaceDetails(),
         PlaceMap.routeName: (context) => PlaceMap(),
       },
