@@ -4,6 +4,11 @@ import '../widgets/custom_fab.dart';
 
 import '../models/review.dart';
 import '../widgets/review_item.dart';
+
+import '../models/activity.dart';
+import '../widgets/activity_item.dart';
+
+
 import 'place_map.dart';
 
 class PlaceDetails extends StatefulWidget {
@@ -55,6 +60,8 @@ class _PlaceDetailsState extends State<PlaceDetails> {
               style: TextStyle(fontSize: 18),
             ),
             SizedBox(height: 50),
+            ...activities.map((Activity activity) => ActivityItem(activity)).toList(),
+            SizedBox(height: 30),
             Text(
               'Reviews',
               style: TextStyle(
@@ -62,15 +69,8 @@ class _PlaceDetailsState extends State<PlaceDetails> {
                   fontSize: 22,
                   fontWeight: FontWeight.bold),
             ),
-            ListView.builder(
-              shrinkWrap: true,
-              primary: false,
-              physics: ClampingScrollPhysics(),
-              itemCount: reviews.length,
-              itemBuilder: (context, index) {
-                return ReviewItem(reviews[index]);
-              },
-            ),
+            ...reviews.map((Review review) => ReviewItem(review)).toList(),
+
             SizedBox(height: 40),
           ],
         ),
