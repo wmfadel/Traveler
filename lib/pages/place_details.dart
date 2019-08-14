@@ -70,7 +70,6 @@ class _PlaceDetailsState extends State<PlaceDetails> {
                   fontWeight: FontWeight.bold),
             ),
             ...reviews.map((Review review) => ReviewItem(review)).toList(),
-
             SizedBox(height: 40),
           ],
         ),

@@ -4,14 +4,14 @@ import '../models/destination.dart';
 import '../widgets/destination_item.dart';
 import '../widgets/custom_drawer.dart';
 
-class PlacesPage extends StatefulWidget {
-  static const String routeName = '/';
+class WatchedPlaces extends StatefulWidget {
+  static const String routeName = '/watched-page';
 
   @override
-  _PlacesPageState createState() => _PlacesPageState();
+  _WatchedPlacesState createState() => _WatchedPlacesState();
 }
 
-class _PlacesPageState extends State<PlacesPage>
+class _WatchedPlacesState extends State<WatchedPlaces>
     with SingleTickerProviderStateMixin {
   double screenWidth;
   double screenHeight;
@@ -102,7 +102,7 @@ class _PlacesPageState extends State<PlacesPage>
                               isCollapsed = !isCollapsed;
                             });
                           }),
-                      Text('Best Places', style: TextStyle(fontSize: 18)),
+                      Text('Watched Places', style: TextStyle(fontSize: 18)),
                       SizedBox(width: 40),
                     ],
                   ),
@@ -112,9 +112,9 @@ class _PlacesPageState extends State<PlacesPage>
                 height: MediaQuery.of(context).size.height - 80,
                 color: Colors.white,
                 child: ListView.builder(
-                  itemCount: destinations.length,
+                  itemCount: watchedDestinations.length,
                   itemBuilder: (context, index) {
-                    return DestinationItem(destinations[index]);
+                    return DestinationItem(watchedDestinations[index]);
                   },
                 ),
               ),

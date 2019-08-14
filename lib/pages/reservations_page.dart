@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-
-import '../models/destination.dart';
-import '../widgets/destination_item.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import '../widgets/custom_drawer.dart';
+import 'package:flutter/gestures.dart';
+import 'places_page.dart';
+import '../enums/drawer_pages.dart';
 
-class PlacesPage extends StatefulWidget {
-  static const String routeName = '/';
+class ReservationsPage extends StatefulWidget {
+  static const String routeName = '/reservations-page';
 
   @override
-  _PlacesPageState createState() => _PlacesPageState();
+  _ReservationsPageState createState() => _ReservationsPageState();
 }
 
-class _PlacesPageState extends State<PlacesPage>
+class _ReservationsPageState extends State<ReservationsPage>
     with SingleTickerProviderStateMixin {
   double screenWidth;
   double screenHeight;
@@ -102,7 +103,7 @@ class _PlacesPageState extends State<PlacesPage>
                               isCollapsed = !isCollapsed;
                             });
                           }),
-                      Text('Best Places', style: TextStyle(fontSize: 18)),
+                      Text('My Reservations', style: TextStyle(fontSize: 18)),
                       SizedBox(width: 40),
                     ],
                   ),
@@ -111,11 +112,49 @@ class _PlacesPageState extends State<PlacesPage>
               Container(
                 height: MediaQuery.of(context).size.height - 80,
                 color: Colors.white,
-                child: ListView.builder(
-                  itemCount: destinations.length,
-                  itemBuilder: (context, index) {
-                    return DestinationItem(destinations[index]);
-                  },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: RichText(
+                        textAlign: TextAlign.center,
+                        text: new TextSpan(
+                          text:
+                              'It seems that you don\'t have plans for the near future\nluckely you can add some ',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18),
+                          children: <TextSpan>[
+                            TextSpan(
+                                text: 'now.',
+                                style: TextStyle(
+                                    color: Colors.blueAccent,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 22),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    CustomDrawer.drawerPages =
+                                        DrawerPages.bestPlaces;
+                                    Navigator.of(context).pushReplacementNamed(
+                                        PlacesPage.routeName);
+                                  }),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 50),
+                    Container(
+                      width: screenWidth,
+                      height: 400,
+                      padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+                      child: FlareActor("assets/flare/tedd.flr",
+                          alignment: Alignment.center,
+                          fit: BoxFit.contain,
+                          animation: "idle"),
+                    ),
+                  ],
                 ),
               ),
             ],
