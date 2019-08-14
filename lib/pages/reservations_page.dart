@@ -16,6 +16,7 @@ class _ReservationsPageState extends State<ReservationsPage>
     with SingleTickerProviderStateMixin {
   double screenWidth;
   double screenHeight;
+  Orientation orientation;
   bool isCollapsed = true;
   final Duration duration = Duration(milliseconds: 300);
   AnimationController _controller;
@@ -39,6 +40,7 @@ class _ReservationsPageState extends State<ReservationsPage>
     Size size = MediaQuery.of(context).size;
     screenWidth = size.width;
     screenHeight = size.height;
+    orientation = MediaQuery.of(context).orientation;
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -112,56 +114,64 @@ class _ReservationsPageState extends State<ReservationsPage>
               Container(
                 height: MediaQuery.of(context).size.height - 80,
                 color: Colors.white,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: RichText(
-                        textAlign: TextAlign.center,
-                        text: new TextSpan(
-                          text:
-                              'It seems that you don\'t have plans for the near future\nluckely you can add some ',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18),
-                          children: <TextSpan>[
-                            TextSpan(
-                                text: 'now.',
-                                style: TextStyle(
-                                    color: Colors.blueAccent,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 22),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    CustomDrawer.drawerPages =
-                                        DrawerPages.bestPlaces;
-                                    Navigator.of(context).pushReplacementNamed(
-                                        PlacesPage.routeName);
-                                  }),
-                          ],
-                        ),
+                child: orientation == Orientation.portrait
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: buildContent(),
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: buildContent(),
                       ),
-                    ),
-                    SizedBox(height: 50),
-                    Container(
-                      width: screenWidth,
-                      height: 400,
-                      padding: EdgeInsets.only(left: 10, right: 10, top: 10),
-                      child: FlareActor("assets/flare/tedd.flr",
-                          alignment: Alignment.center,
-                          fit: BoxFit.contain,
-                          animation: "idle"),
-                    ),
-                  ],
-                ),
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  List<Widget> buildContent() {
+    return [
+      Padding(
+        padding: const EdgeInsets.all(20),
+        child: RichText(
+          textAlign: TextAlign.center,
+          text: new TextSpan(
+            text:
+                'It seems that you don\'t have plans for the near future\nluckely you can add some ',
+            style: TextStyle(
+                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
+            children: <TextSpan>[
+              TextSpan(
+                  text: 'now!!!',
+                  style: TextStyle(
+                      color: Colors.blueAccent,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 22),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      CustomDrawer.drawerPages = DrawerPages.bestPlaces;
+                      Navigator.of(context)
+                          .pushReplacementNamed(PlacesPage.routeName);
+                    }),
+            ],
+          ),
+        ),
+      ),
+      SizedBox(height: 50),
+      Container(
+        width: orientation == Orientation.portrait
+            ? screenWidth
+            : screenWidth * 0.4,
+        height: 400,
+        padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+        child: FlareActor("assets/flare/tedd.flr",
+            alignment: Alignment.center,
+            fit: BoxFit.contain,
+            animation: "idle"),
+      ),
+    ];
   }
 
   @override
