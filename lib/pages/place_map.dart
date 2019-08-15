@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/map_provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../models/destination.dart';
+import '../models/map_place.dart';
 import '../widgets/map_option.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -20,6 +23,8 @@ class _PlaceMapState extends State<PlaceMap> {
   Orientation orientation;
   Completer<GoogleMapController> _controller = Completer();
   GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
+  var markers = Set<Marker>.of([]);
+  MapProvider mapProvider;
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +33,7 @@ class _PlaceMapState extends State<PlaceMap> {
     destination = destinations.firstWhere((dest) {
       return dest.id == placeId;
     });
+    mapProvider = Provider.of<MapProvider>(context, listen: false);
     Size size = MediaQuery.of(context).size;
     screenWidth = size.width;
     screenHeight = size.height;
@@ -48,6 +54,13 @@ class _PlaceMapState extends State<PlaceMap> {
                 zoom: 14,
                 target: LatLng(destination.lat, destination.lng),
               ),
+              compassEnabled: true,
+              mapToolbarEnabled: true,
+              myLocationButtonEnabled: true,
+              rotateGesturesEnabled: true,
+              scrollGesturesEnabled: true,
+              zoomGesturesEnabled: true,
+              markers: markers,
               onMapCreated: (GoogleMapController controller) {
                 _controller.complete(controller);
               },
@@ -62,6 +75,24 @@ class _PlaceMapState extends State<PlaceMap> {
         ],
       ),
     );
+  }
+
+  addMarkers() async {
+    print('adding markers');
+    markers.clear();
+    mapProvider.places.forEach((MapPlace mapPlace) {
+      markers.add(Marker(
+        markerId: MarkerId(mapPlace.id),
+        position: LatLng(mapPlace.lat, mapPlace.lng),
+        infoWindow: InfoWindow(
+            title:
+                '${mapPlace.name} - rate: ${mapPlace.rating != null ? mapPlace.rating : 'bot rated'}',
+            snippet: mapPlace.vicinity),
+      ));
+    });
+    print('places count ${mapProvider.places.length}');
+    print('markers count ${markers.length}');
+    setState(() {});
   }
 
   buildSearchBottomSheet() {
@@ -84,41 +115,118 @@ class _PlaceMapState extends State<PlaceMap> {
                         crossAxisCount:
                             orientation == Orientation.portrait ? 4 : 8),
                     children: <Widget>[
-                      MapOption(iconData: Icons.hotel, label: 'Hotels'),
-                      MapOption(iconData: Icons.restaurant, label: 'Food'),
                       MapOption(
-                          iconData: FontAwesomeIcons.wineGlass, label: 'Bar'),
+                        iconData: Icons.hotel,
+                        label: 'Hotels',
+                        onTap: addMarkers,
+                        lat: destination.lat,
+                        lng: destination.lng,
+                      ),
                       MapOption(
-                          iconData: FontAwesomeIcons.coffee, label: 'Caffe'),
+                        iconData: Icons.restaurant,
+                        label: 'Food',
+                        onTap: addMarkers,
+                        lat: destination.lat,
+                        lng: destination.lng,
+                      ),
                       MapOption(
-                          iconData: FontAwesomeIcons.hospital,
-                          label: 'Hospital'),
+                        iconData: FontAwesomeIcons.wineGlass,
+                        label: 'Bar',
+                        onTap: addMarkers,
+                        lat: destination.lat,
+                        lng: destination.lng,
+                      ),
                       MapOption(
-                          iconData: FontAwesomeIcons.balanceScale,
-                          label: 'Police'),
+                        iconData: FontAwesomeIcons.coffee,
+                        label: 'Caffe',
+                        onTap: addMarkers,
+                        lat: destination.lat,
+                        lng: destination.lng,
+                      ),
                       MapOption(
-                          iconData: FontAwesomeIcons.school, label: 'Schools'),
+                        iconData: FontAwesomeIcons.hospital,
+                        label: 'Hospital',
+                        onTap: addMarkers,
+                        lat: destination.lat,
+                        lng: destination.lng,
+                      ),
                       MapOption(
-                          iconData: FontAwesomeIcons.university,
-                          label: 'Univiristy'),
+                        iconData: FontAwesomeIcons.balanceScale,
+                        label: 'Police',
+                        onTap: addMarkers,
+                        lat: destination.lat,
+                        lng: destination.lng,
+                      ),
                       MapOption(
-                          iconData: FontAwesomeIcons.clinicMedical,
-                          label: 'Clinics'),
+                        iconData: FontAwesomeIcons.school,
+                        label: 'Schools',
+                        onTap: addMarkers,
+                        lat: destination.lat,
+                        lng: destination.lng,
+                      ),
                       MapOption(
-                          iconData: FontAwesomeIcons.tree, label: 'Forests'),
+                        iconData: FontAwesomeIcons.university,
+                        label: 'Univiristy',
+                        onTap: addMarkers,
+                        lat: destination.lat,
+                        lng: destination.lng,
+                      ),
                       MapOption(
-                          iconData: FontAwesomeIcons.book, label: 'Library'),
+                        iconData: FontAwesomeIcons.clinicMedical,
+                        label: 'Clinics',
+                        onTap: addMarkers,
+                        lat: destination.lat,
+                        lng: destination.lng,
+                      ),
                       MapOption(
-                          iconData: FontAwesomeIcons.building, label: 'Garage'),
+                        iconData: FontAwesomeIcons.tree,
+                        label: 'Forests',
+                        onTap: addMarkers,
+                        lat: destination.lat,
+                        lng: destination.lng,
+                      ),
                       MapOption(
-                          iconData: FontAwesomeIcons.landmark,
-                          label: 'Monument'),
+                        iconData: FontAwesomeIcons.book,
+                        label: 'Library',
+                        onTap: addMarkers,
+                        lat: destination.lat,
+                        lng: destination.lng,
+                      ),
                       MapOption(
-                          iconData: FontAwesomeIcons.gasPump, label: 'Gas'),
+                        iconData: FontAwesomeIcons.building,
+                        label: 'Garage',
+                        onTap: addMarkers,
+                        lat: destination.lat,
+                        lng: destination.lng,
+                      ),
                       MapOption(
-                          iconData: FontAwesomeIcons.plane, label: 'Airport'),
+                        iconData: FontAwesomeIcons.landmark,
+                        label: 'Museum',
+                        onTap: addMarkers,
+                        lat: destination.lat,
+                        lng: destination.lng,
+                      ),
                       MapOption(
-                          iconData: FontAwesomeIcons.ship, label: 'Harbour'),
+                        iconData: FontAwesomeIcons.gasPump,
+                        label: 'Gas',
+                        onTap: addMarkers,
+                        lat: destination.lat,
+                        lng: destination.lng,
+                      ),
+                      MapOption(
+                        iconData: FontAwesomeIcons.plane,
+                        label: 'Airport',
+                        onTap: addMarkers,
+                        lat: destination.lat,
+                        lng: destination.lng,
+                      ),
+                      MapOption(
+                        iconData: FontAwesomeIcons.ship,
+                        label: 'Harbour',
+                        onTap: addMarkers,
+                        lat: destination.lat,
+                        lng: destination.lng,
+                      ),
                     ],
                   ),
                 )
@@ -145,7 +253,7 @@ class SearchFab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 25, right: 16),
+      padding: const EdgeInsets.only(bottom: 80, right: 20),
       child: FloatingActionButton(
         child: Icon(Icons.search, color: Colors.white),
         backgroundColor: Colors.blueAccent,

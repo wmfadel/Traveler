@@ -6,36 +6,33 @@ class MapPlace {
   String id;
   String name;
   String vicinity;
-  bool open_now;
   String photo_reference;
   String place_id;
   double rating;
   List<String> types;
 
-  MapPlace(
-    this.lat,
-    this.lng,
-    this.id,
-    this.name,
-    this.vicinity,
-    this.open_now,
-    this.photo_reference,
-    this.place_id,
-    this.rating,
-    this.types,
-  );
+  MapPlace({
+    @required this.lat,
+    @required this.lng,
+    @required this.id,
+    @required this.name,
+    @required this.vicinity,
+    @required this.photo_reference,
+    @required this.place_id,
+    @required this.rating,
+    @required this.types,
+  });
 
-  MapPlace.fromJson(Map<String, dynamic> json) :
-        this.lat = json['geometry']['location']['lat'],
+  MapPlace.fromJson(Map<String, dynamic> json)
+      : this.lat = json['geometry']['location']['lat'],
         this.lng = json['geometry']['location']['lng'],
         this.id = json['id'],
         this.name = json['name'],
         this.vicinity = json['vicinity'],
-        this.open_now = json['opening_hours']['open_now'],
-        this.photo_reference = json['photo_reference']['photo_reference'],
+        this.photo_reference = json.containsKey('photos')?json['photos'][0]['photo_reference']:null,
         this.place_id = json['place_id'],
-        this.rating = json['rating'],
-        this.types = json['types'];
+        this.rating = json.containsKey('rating')?double.parse(json['rating'].toString()):0.0,
+        this.types = List<String>.from(json['types']);
 }
 
 /*
