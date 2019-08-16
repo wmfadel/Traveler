@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/map_provider.dart';
@@ -6,6 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../models/destination.dart';
 import '../models/map_place.dart';
 import '../widgets/map_option.dart';
+import '../widgets/info_chip.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -25,6 +27,7 @@ class _PlaceMapState extends State<PlaceMap> {
   GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
   var markers = Set<Marker>.of([]);
   MapProvider mapProvider;
+  PersistentBottomSheetController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -80,19 +83,105 @@ class _PlaceMapState extends State<PlaceMap> {
   addMarkers() async {
     print('adding markers');
     markers.clear();
+    setState(() {});
     mapProvider.places.forEach((MapPlace mapPlace) {
       markers.add(Marker(
-        markerId: MarkerId(mapPlace.id),
-        position: LatLng(mapPlace.lat, mapPlace.lng),
-        infoWindow: InfoWindow(
-            title:
-                '${mapPlace.name} - rate: ${mapPlace.rating != null ? mapPlace.rating : 'bot rated'}',
-            snippet: mapPlace.vicinity),
-      ));
+          markerId: MarkerId('${mapPlace.id}-${math.Random(24)}'),
+          position: LatLng(mapPlace.lat, mapPlace.lng),
+          infoWindow: InfoWindow(
+              title:
+                  '${mapPlace.name} - rate: ${mapPlace.rating != null ? mapPlace.rating : 'not rated'}',
+              snippet: mapPlace.vicinity),
+          onTap: () {
+            buildPlaceBottomSheet(mapPlace);
+          }));
     });
     print('places count ${mapProvider.places.length}');
     print('markers count ${markers.length}');
     setState(() {});
+  }
+
+  buildPlaceBottomSheet(MapPlace mapPlace) {
+    _closeModalBottomSheet();
+    controller = _globalKey.currentState.showBottomSheet(
+      (context) {
+        return Container(
+            width: screenWidth,
+            padding: EdgeInsets.symmetric(vertical: 15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8, bottom: 8),
+                  child: Text(
+                    mapPlace.name,
+                    style: TextStyle(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: Text(
+                    mapPlace.vicinity,
+                    style: TextStyle(color: Colors.black, fontSize: 18),
+                  ),
+                ),
+                Wrap(
+                  children: <Widget>[
+                    InfoChip(
+                      'rate',
+                      mapPlace.rating.toString(),
+                      color: Colors.blueAccent,
+                    ),
+                    ...mapPlace.types.map((String tile) {
+                      return Container(
+                        margin: EdgeInsets.all(5),
+                        child: Chip(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 2),
+                            backgroundColor: Colors.blueAccent,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25)),
+                            label: Text(
+                              tile,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.white),
+                            )),
+                      );
+                    }).toList()
+                  ],
+                ),
+                SizedBox(height: 20),
+                Container(
+                  width: screenWidth,
+                  height: 300,
+                  child: Image.network(
+                    'https://maps.googleapis.com/maps/api/place/photo?photoreference=${mapPlace.photo_reference}&maxheight=300&maxwidth=600&key=AIzaSyAWdJUdZD75aDBqMMAT3RITwbjqMAs5WVw',
+                    width: screenWidth,
+                    height: 300,
+                    fit: BoxFit.fill,
+                  ),
+                )
+              ],
+            ));
+      },
+      elevation: 20,
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topRight: Radius.circular(25), topLeft: Radius.circular(25))),
+    );
+  }
+
+  void _closeModalBottomSheet() {
+    if (controller != null) {
+      controller.close();
+      controller = null;
+    }
   }
 
   buildSearchBottomSheet() {
@@ -237,13 +326,15 @@ class _PlaceMapState extends State<PlaceMap> {
       },
       elevation: 20,
       backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topRight: Radius.circular(25), topLeft: Radius.circular(25))),
     );
   }
 }
 
 class SearchFab extends StatelessWidget {
-  Function onTap;
+  final Function onTap;
 
   SearchFab({
     @required this.onTap,
