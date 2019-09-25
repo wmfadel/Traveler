@@ -107,7 +107,7 @@ class _PlaceMapState extends State<PlaceMap> {
       (context) {
         return Container(
             width: screenWidth,
-            padding: EdgeInsets.symmetric(vertical: 15),
+            padding: EdgeInsets.only(top: 15),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
@@ -158,11 +158,11 @@ class _PlaceMapState extends State<PlaceMap> {
                 SizedBox(height: 20),
                 Container(
                   width: screenWidth,
-                  height: 300,
+                  height: 160,
                   child: Image.network(
-                    'https://maps.googleapis.com/maps/api/place/photo?photoreference=${mapPlace.photo_reference}&maxheight=300&maxwidth=600&key=AIzaSyAWdJUdZD75aDBqMMAT3RITwbjqMAs5WVw',
+                    'https://maps.googleapis.com/maps/api/place/photo?photoreference=${mapPlace.photo_reference}&maxheight=300&maxwidth=600&key=YOUR_API_KEY',
                     width: screenWidth,
-                    height: 300,
+                    height: 150,
                     fit: BoxFit.fill,
                   ),
                 )
