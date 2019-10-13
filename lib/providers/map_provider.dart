@@ -32,14 +32,6 @@ class MapProvider extends ChangeNotifier {
 const String fields =
     'fields=photos,formatted_address,name,rating,opening_hours,geometry';
 const String radius = 'radius=5000';
-const String key = 'key=AIzaSyAWdJUdZD75aDBqMMAT3RITwbjqMAs5WVw';
+const String key = 'key=ADD_YOUR_API_KEY';
 const String base =
     'https://maps.googleapis.com/maps/api/place/nearbysearch/json?';
-
-/*
-https://maps.googleapis.com/maps/api/place/nearbysearch/json?
-key=AIzaSyAWdJUdZD75aDBqMMAT3RITwbjqMAs5WVw
-&location=30.0423942,31.2323014
-&radius=1500&type=restaurant
-&fields=photos,formatted_address,name,rating,opening_hours,geometry
- */
